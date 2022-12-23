@@ -1,10 +1,10 @@
-import { globalCss } from "@ignite-ui/react";
+import { globalCss } from '@ignite-ui/react'
 
 export const globalStyles = globalCss({
-  "*": {
+  '*': {
     boxSizing: 'border-box',
     padding: 0,
-    margin: 0
+    margin: 0,
   },
 
   body: {
@@ -13,5 +13,5 @@ export const globalStyles = globalCss({
     textRendering: 'optimizeLegibility',
     '--webkit-font-smoothing': 'antialiased',
     '-moz-osx-font-smoothing': 'grayscale',
-  }
+  },
 })
