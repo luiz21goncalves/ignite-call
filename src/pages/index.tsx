@@ -1,5 +1,7 @@
+import { Heading } from "@ignite-ui/react";
+
 export default function Home() {
   return (
-   <h1>Home</h1>
+   <Heading>Home</Heading>
   )
 }
