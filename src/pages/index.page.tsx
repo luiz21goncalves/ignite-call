@@ -1,5 +1,1 @@
-import { Heading } from '@ignite-ui/react'
-
-export default function Home() {
-  return <Heading>Home</Heading>
-}
+export { default } from './home'
