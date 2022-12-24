@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
+import { useRouter } from 'next/router'
+
 import * as S from './styles'
 
 const claimUsernameFormSchema = z.object({
@@ -22,13 +24,22 @@ export function ClaimUsenameForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ClaimUsernameFormData>({
     resolver: zodResolver(claimUsernameFormSchema),
   })
 
+  const router = useRouter()
+
   async function handleClaimUsername(data: ClaimUsernameFormData) {
-    console.log(data)
+    const { username } = data
+
+    await router.push({
+      pathname: '/register',
+      query: {
+        username,
+      },
+    })
   }
 
   const formAnnotationText = errors.username
@@ -45,7 +56,7 @@ export function ClaimUsenameForm() {
           {...register('username')}
         />
 
-        <Button size="sm" type="submit">
+        <Button size="sm" type="submit" disabled={isSubmitting}>
           Reservar
           <ArrowRight />
         </Button>
