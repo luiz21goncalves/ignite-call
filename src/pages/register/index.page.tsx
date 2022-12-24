@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Heading, MultiStep, Text, TextInput } from '@ignite-ui/react'
+import { Button, Text, TextInput } from '@ignite-ui/react'
 import { AxiosError } from 'axios'
 import { useRouter } from 'next/router'
 import { ArrowRight } from 'phosphor-react'
@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { api } from '../../lib/axios'
+import { Header } from './components/Header'
 
 import * as S from './styles'
 
@@ -74,15 +75,7 @@ export default function Register() {
 
   return (
     <S.Container>
-      <S.Header>
-        <Heading as="strong">Ben-vendo ao Ignite Call!</Heading>
-        <Text>
-          Precisamos de algumas informações para criar seu perfil! Ah, você pode
-          editar essas informações depois.
-        </Text>
-
-        <MultiStep size={4} currentStep={1} />
-      </S.Header>
+      <Header multiStepSize={4} currentStep={1} />
 
       <S.Form as="form" onSubmit={handleSubmit(handleRegister)}>
         <label>
