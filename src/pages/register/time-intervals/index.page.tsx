@@ -1,15 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Checkbox, Text, TextInput } from '@ignite-ui/react'
+import { useRouter } from 'next/router'
 import { ArrowRight } from 'phosphor-react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { api } from '../../../lib/axios'
-
 import { convertTimeStringToMinutes } from '../../../utils/convert-time-string-to-minutes'
-
 import { getWeekDays } from '../../../utils/get-week-days'
-
 import { Header } from '../components/Header'
 import { Container } from '../styles'
 
@@ -79,10 +77,14 @@ export default function TimeIntervals() {
   })
   const { fields } = useFieldArray({ name: 'intervals', control })
 
+  const router = useRouter()
+
   async function handleSetTimeIntervals(data: any) {
     const { intervals } = data as TimeIntervalsFormOutput
 
     await api.post('/users/time-intervals', { intervals })
+
+    await router.push('/users/update-profile')
   }
 
   const intervals = watch('intervals')
