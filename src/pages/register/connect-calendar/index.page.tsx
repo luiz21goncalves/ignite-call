@@ -16,6 +16,10 @@ export default function ConnetCalendar() {
     await signIn('google')
   }
 
+  async function handleRedirectToTimeIntervals() {
+    await router.push('/register/time-intervals')
+  }
+
   const hasAuthError = Boolean(router.query?.error)
   const isSignedIn = session.status === 'authenticated'
 
@@ -55,7 +59,11 @@ export default function ConnetCalendar() {
           </S.AuthError>
         )}
 
-        <Button type="submit" disabled={!isSignedIn}>
+        <Button
+          type="submit"
+          disabled={!isSignedIn}
+          onClick={handleRedirectToTimeIntervals}
+        >
           Próximo passo
           <ArrowRight />
         </Button>
