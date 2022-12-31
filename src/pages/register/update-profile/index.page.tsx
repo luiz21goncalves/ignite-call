@@ -6,11 +6,13 @@ import { ArrowRight } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { unstable_getServerSession as unstableGetServerSession } from 'next-auth'
+import { useRouter } from 'next/router'
 
 import { Header } from '../components/Header'
 import { Container } from '../styles'
 import { buildNextAuthOptions } from '../../api/auth/[...nextauth].api'
 import * as S from './styles'
+import { api } from '../../../lib/axios'
 
 const updateProfileSchema = z.object({
   bio: z.string(),
@@ -19,8 +21,6 @@ const updateProfileSchema = z.object({
 type UpdateProfileFormData = z.infer<typeof updateProfileSchema>
 
 export default function UpdateProfile() {
-  const session = useSession()
-
   const {
     register,
     handleSubmit,
@@ -29,11 +29,16 @@ export default function UpdateProfile() {
     resolver: zodResolver(updateProfileSchema),
   })
 
-  async function handleUpdateProfile(data: UpdateProfileFormData) {
-    console.log(data)
-  }
+  const session = useSession()
+  const router = useRouter()
 
-  console.log(session)
+  async function handleUpdateProfile(data: UpdateProfileFormData) {
+    await api.put('/users/update-profile', {
+      bio: data.bio,
+    })
+
+    await router.push(`/schedule/${session.data?.user.username}`)
+  }
 
   return (
     <Container>
