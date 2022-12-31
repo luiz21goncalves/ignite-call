@@ -3,7 +3,6 @@ import { unstable_getServerSession as unstableGetServerSession } from 'next-auth
 import { z } from 'zod'
 
 import { prisma } from '../../../lib/prisma'
-
 import { buildNextAuthOptions } from '../auth/[...nextauth].api'
 
 const timeIntervalsBodySchema = z.object({

@@ -1,5 +1,4 @@
 import { Heading, Text } from '@ignite-ui/react'
-
 import Image from 'next/image'
 
 import * as S from './styles'

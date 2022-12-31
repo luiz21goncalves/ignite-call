@@ -9,7 +9,6 @@ import { z } from 'zod'
 
 import { api } from '../../lib/axios'
 import { Header } from './components/Header'
-
 import * as S from './styles'
 
 const registerFormSchema = z.object({

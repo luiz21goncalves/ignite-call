@@ -10,7 +10,6 @@ import { convertTimeStringToMinutes } from '../../../utils/convert-time-string-t
 import { getWeekDays } from '../../../utils/get-week-days'
 import { Header } from '../components/Header'
 import { Container } from '../styles'
-
 import * as S from './styles'
 
 const timeIntervalsFormSchema = z.object({
