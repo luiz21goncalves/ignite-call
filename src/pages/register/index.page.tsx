@@ -77,7 +77,12 @@ export default function Register() {
 
   return (
     <S.Container>
-      <Header multiStepSize={4} currentStep={1} />
+      <Header
+        multiStepSize={4}
+        currentStep={1}
+        title="Bem-vindo ao Ignite Call!"
+        content="Precisamos de algumas informações para criar seu perfil! Ah, você pode editar essas informações depois."
+      />
 
       <S.Form as="form" onSubmit={handleSubmit(handleRegister)}>
         <label>

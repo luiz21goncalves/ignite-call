@@ -21,7 +21,12 @@ export default function ConnetCalendar() {
 
   return (
     <Container>
-      <Header multiStepSize={4} currentStep={2} />
+      <Header
+        multiStepSize={4}
+        currentStep={2}
+        title="Conecte sua agenda!"
+        content="Conecte o seu calendário para verificar automaticamente as horas ocupadas e os novos eventos à medida em que são agendados."
+      />
 
       <S.ConnectBox>
         <S.ConnectItem>
