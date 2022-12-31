@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { prisma } from '../../../lib/prisma'
 
-import { buildNExtAuthOptions } from '../auth/[...nextauth].api'
+import { buildNextAuthOptions } from '../auth/[...nextauth].api'
 
 const timeIntervalsBodySchema = z.object({
   intervals: z
@@ -36,7 +36,7 @@ export default async function handler(
   const session = await unstableGetServerSession(
     req,
     res,
-    buildNExtAuthOptions(req, res),
+    buildNextAuthOptions(req, res),
   )
 
   const isNotAuthenticated = !session
