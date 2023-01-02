@@ -24,3 +24,8 @@ export const parameters = {
     Provider: RouterContext.Provider,
   },
 }
+
+if (typeof global.process === 'undefined') {
+  const { worker } = require('../src/mocks/browser')
+  worker.start()
+}
