@@ -3,15 +3,17 @@ import { within, userEvent } from '@storybook/testing-library'
 
 import Home from '.'
 
+type HomeProps = typeof Home
+
 export default {
   title: 'Pages/Home',
   component: Home,
   parameters: {
     layout: 'fullscreen',
   },
-} as ComponentMeta<typeof Home>
+} as ComponentMeta<HomeProps>
 
-const Template: ComponentStory<typeof Home> = (args) => <Home />
+const Template: ComponentStory<HomeProps> = () => <Home />
 
 export const Default = Template.bind({})
 
