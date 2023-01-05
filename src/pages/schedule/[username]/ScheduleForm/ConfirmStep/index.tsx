@@ -1,13 +1,36 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Text, TextArea, TextInput } from '@ignite-ui/react'
 import { CalendarBlank, Clock } from 'phosphor-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import * as S from './styles'
 
+const confirmScheduleFormSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: 'O nome precisa do mínimo de 3 caracteres' }),
+  email: z.string().email({ message: 'Digite um e-mail válido' }),
+  observations: z.string().nullable(),
+})
+
+type ConfirmScheduleFormData = z.infer<typeof confirmScheduleFormSchema>
+
 export function ConfirmStep() {
-  function handleConfirmScheduling() {}
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<ConfirmScheduleFormData>({
+    resolver: zodResolver(confirmScheduleFormSchema),
+  })
+
+  function handleConfirmScheduling(data: ConfirmScheduleFormData) {
+    console.log(data)
+  }
 
   return (
-    <S.Form as="form" onSubmit={handleConfirmScheduling}>
+    <S.Form as="form" onSubmit={handleSubmit(handleConfirmScheduling)}>
       <S.FormHeader>
         <Text>
           <CalendarBlank />
@@ -22,17 +45,27 @@ export function ConfirmStep() {
 
       <label>
         <Text size="sm">Nome completo</Text>
-        <TextInput placeholder="Seu nome" />
+        <TextInput placeholder="Seu nome" {...register('name')} />
+        {errors.name && (
+          <S.FormError size="sm">{errors.name.message}</S.FormError>
+        )}
       </label>
 
       <label>
         <Text size="sm">Endereço de e-mail</Text>
-        <TextInput type="email" placeholder="johndoe@example.com" />
+        <TextInput
+          type="email"
+          placeholder="johndoe@example.com"
+          {...register('email')}
+        />
+        {errors.email && (
+          <S.FormError size="sm">{errors.email.message}</S.FormError>
+        )}
       </label>
 
       <label>
         <Text size="sm">Observações</Text>
-        <TextArea />
+        <TextArea {...register('observations')} />
       </label>
 
       <S.FormActions>
@@ -40,7 +73,9 @@ export function ConfirmStep() {
           Cancelar
         </Button>
 
-        <Button type="submit">Confirmar</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          Confirmar
+        </Button>
       </S.FormActions>
     </S.Form>
   )
