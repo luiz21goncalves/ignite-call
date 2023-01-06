@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { CaretLeft, CaretRight } from 'phosphor-react'
 import { useId, useMemo, useState } from 'react'
 
-import { getShortWeekDays } from '../../../utils/get-week-days'
+import { getShortWeekDays } from '../../utils/get-week-days'
 import * as S from './style'
 
 const shortWeekDays = getShortWeekDays()
