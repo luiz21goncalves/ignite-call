@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Checkbox, Text, TextInput } from '@ignite-ui/react'
+import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 import { ArrowRight } from 'phosphor-react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
@@ -76,14 +77,24 @@ export default function TimeIntervals() {
   })
   const { fields } = useFieldArray({ name: 'intervals', control })
 
+  const { mutate } = useMutation<unknown, unknown, TimeIntervalsFormOutput>({
+    mutationFn: ({ intervals }) =>
+      api.post('/users/time-intervals', { intervals }),
+  })
+
   const router = useRouter()
 
   async function handleSetTimeIntervals(data: any) {
     const { intervals } = data as TimeIntervalsFormOutput
 
-    await api.post('/users/time-intervals', { intervals })
-
-    await router.push('/users/update-profile')
+    mutate(
+      { intervals },
+      {
+        onSuccess: async () => {
+          await router.push('/register/update-profile')
+        },
+      },
+    )
   }
 
   const intervals = watch('intervals')

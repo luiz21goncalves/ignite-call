@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { unstable_getServerSession as unstableGetServerSession } from 'next-auth'
 import { useRouter } from 'next/router'
+import { useMutation } from '@tanstack/react-query'
 
 import { Header } from '../components/Header'
 import { Container } from '../styles'
@@ -29,15 +30,26 @@ export default function UpdateProfile() {
     resolver: zodResolver(updateProfileSchema),
   })
 
+  const { mutate } = useMutation<unknown, unknown, UpdateProfileFormData>({
+    mutationFn: ({ bio }) =>
+      api.put('/users/update-profile', {
+        bio,
+      }),
+  })
+
   const session = useSession()
   const router = useRouter()
 
   async function handleUpdateProfile(data: UpdateProfileFormData) {
-    await api.put('/users/update-profile', {
-      bio: data.bio,
-    })
-
-    await router.push(`/schedule/${session.data?.user.username}`)
+    const { bio } = data
+    mutate(
+      { bio },
+      {
+        onSuccess: async () => {
+          await router.push(`/schedule/${session.data?.user.username}`)
+        },
+      },
+    )
   }
 
   return (

@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Text, TextInput } from '@ignite-ui/react'
+import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { useRouter } from 'next/router'
 import { ArrowRight } from 'phosphor-react'
@@ -38,6 +39,18 @@ export default function Register() {
 
   const router = useRouter()
 
+  const { mutate } = useMutation<
+    unknown,
+    AxiosError<{ message: string }>,
+    RegisterFormData
+  >({
+    mutationFn: ({ name, username }) =>
+      api.post('/users', {
+        name,
+        username,
+      }),
+  })
+
   useEffect(() => {
     const username = router.query?.username as string
     const hasUsername = Boolean(username)
@@ -50,28 +63,22 @@ export default function Register() {
   async function handleRegister(data: RegisterFormData) {
     const { name, username } = data
 
-    try {
-      await api.post('/users', {
-        name,
-        username,
-      })
+    mutate(
+      { name, username },
+      {
+        onSuccess: async () => {
+          await router.push('/register/connect-calendar')
+        },
+        onError: async (error) => {
+          const message = error?.response?.data?.message
+          const isKnownError = Boolean(message)
 
-      await router.push('/register/connect-calendar')
-    } catch (error) {
-      const isAxiosError = error instanceof AxiosError
-
-      if (isAxiosError) {
-        const message = error?.response?.data?.message
-        const isKnownError = Boolean(message)
-
-        if (isKnownError) {
-          alert(message)
-          return
-        }
-      }
-
-      console.error(error)
-    }
+          if (isKnownError) {
+            alert(message)
+          }
+        },
+      },
+    )
   }
 
   return (
