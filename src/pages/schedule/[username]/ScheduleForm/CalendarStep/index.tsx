@@ -12,7 +12,13 @@ type Availability = {
   availableTimes: number[]
 }
 
-export function CalendarStep() {
+type CalendarStepProps = {
+  onSelectDateTime: (date: Date) => void
+}
+
+export function CalendarStep(props: CalendarStepProps) {
+  const { onSelectDateTime } = props
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 
   const router = useRouter()
@@ -48,6 +54,15 @@ export function CalendarStep() {
     ? dayjs(selectedDate).format('DD[ de ]MMMM')
     : null
 
+  function handleSelectTime(hour: number) {
+    const dateWithTime = dayjs(selectedDate)
+      .set('hour', hour)
+      .startOf('hour')
+      .toDate()
+
+    onSelectDateTime(dateWithTime)
+  }
+
   return (
     <S.Container isTimePickerOpen={isDateSelected}>
       <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
@@ -64,6 +79,7 @@ export function CalendarStep() {
                 <S.TimePickerItem
                   key={hour}
                   disabled={!availability.availableTimes.includes(hour)}
+                  onClick={() => handleSelectTime(hour)}
                 >
                   {String(hour).padStart(2, '0')}:00h
                 </S.TimePickerItem>

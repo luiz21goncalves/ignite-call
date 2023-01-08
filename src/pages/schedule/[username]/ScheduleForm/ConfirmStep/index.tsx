@@ -1,9 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Text, TextArea, TextInput } from '@ignite-ui/react'
+import { useMutation } from '@tanstack/react-query'
+import dayjs from 'dayjs'
+import { useRouter } from 'next/router'
 import { CalendarBlank, Clock } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { api } from '../../../../../lib/axios'
 import * as S from './styles'
 
 const confirmScheduleFormSchema = z.object({
@@ -16,7 +20,21 @@ const confirmScheduleFormSchema = z.object({
 
 type ConfirmScheduleFormData = z.infer<typeof confirmScheduleFormSchema>
 
-export function ConfirmStep() {
+type ConfirmStepProps = {
+  schedulingDate: Date
+  onCancelConfirmation: () => void
+}
+
+type SchedulingBody = {
+  name: string
+  email: string
+  observations: string | null
+  date: Date
+}
+
+export function ConfirmStep(props: ConfirmStepProps) {
+  const { schedulingDate, onCancelConfirmation } = props
+
   const {
     register,
     handleSubmit,
@@ -25,21 +43,52 @@ export function ConfirmStep() {
     resolver: zodResolver(confirmScheduleFormSchema),
   })
 
-  function handleConfirmScheduling(data: ConfirmScheduleFormData) {
-    console.log(data)
+  const router = useRouter()
+
+  const username = String(router.query.username)
+
+  const { mutate } = useMutation<unknown, unknown, SchedulingBody>({
+    mutationFn: ({ date, email, name, observations }) =>
+      api.post(`/users/${username}/schedule`, {
+        date,
+        email,
+        name,
+        observations,
+      }),
+  })
+
+  async function handleConfirmScheduling(data: ConfirmScheduleFormData) {
+    const { email, name, observations } = data
+
+    mutate(
+      {
+        date: schedulingDate,
+        email,
+        name,
+        observations,
+      },
+      {
+        onSuccess: async () => {
+          onCancelConfirmation()
+        },
+      },
+    )
   }
+
+  const describeDate = dayjs(schedulingDate).format('DD[ de ]MMMM[ de ]YYYY')
+  const describeTime = dayjs(schedulingDate).format('HH:mm[h]')
 
   return (
     <S.Form as="form" onSubmit={handleSubmit(handleConfirmScheduling)}>
       <S.FormHeader>
         <Text>
           <CalendarBlank />
-          22 setembro de 2022
+          {describeDate}
         </Text>
 
         <Text>
           <Clock />
-          18:00h
+          {describeTime}
         </Text>
       </S.FormHeader>
 
@@ -69,7 +118,7 @@ export function ConfirmStep() {
       </label>
 
       <S.FormActions>
-        <Button type="button" variant="tertiary">
+        <Button type="button" variant="tertiary" onClick={onCancelConfirmation}>
           Cancelar
         </Button>
 
